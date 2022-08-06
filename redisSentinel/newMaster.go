@@ -6,30 +6,28 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
-	"strings"
 
 	"github.com/go-redis/redis/v8"
 )
 
 var ctx = context.Background()
+var ipMaster = "10.22.7.107"
+var i = 0
 
-func ChangeConfig(addr string) {
+func ChangeConfig(dataFind string, addr string) {
 	data, err := ioutil.ReadFile("config.js")
 	if err != nil {
 		fmt.Println(err)
 	}
 	//REDIS_HOST: '10.22.7.107',
-	fmt.Print(string(data))
-
 	f, err := os.OpenFile("config.js", os.O_WRONLY, 0600)
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
-	re := regexp.MustCompile(`REDIS_HOST..............'`)
+	re := regexp.MustCompile(`REDIS_HOST: ` + `'` + dataFind + `'`)
 	if _, err = f.WriteString(
-
-		re.ReplaceAllString(string(data), "REDIS_HOST:"+" '"+addr+"' ")); err != nil {
+		re.ReplaceAllString(string(data), addr)); err != nil {
 		panic(err)
 	}
 
@@ -37,8 +35,6 @@ func ChangeConfig(addr string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	fmt.Print(string(data))
 }
 
 func NewMaster() {
@@ -54,11 +50,21 @@ func NewMaster() {
 	fmt.Println("Msg Pattern " + msg.Pattern)
 	fmt.Println("Msg Payload " + msg.Payload)
 	addr, err := sentinel.GetMasterAddrByName(ctx, "mymaster").Result()
-	justString := strings.Join(addr, " ")
-	ChangeConfig(justString)
-	if err != nil {
+	if i == 0 {
+		ChangeConfig(ipMaster, "REDIS_HOST: '"+addr[0]+"'")
+		fmt.Println("ddddss", ipMaster)
+		ipMaster = addr[0]
+		i++
+	} else {
+		ChangeConfig(ipMaster, "REDIS_HOST: '"+addr[0]+"'")
+		ipMaster = addr[0]
+		fmt.Println("dddd", ipMaster)
+		if err != nil {
+		}
+		i++
 	}
-	fmt.Println("Ip new master", addr)
+
+	fmt.Println("Ip new master", addr[0])
 	NewMaster()
 }
 

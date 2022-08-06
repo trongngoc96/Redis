@@ -24,7 +24,7 @@ module.exports = {
                 DB_PASSWORD: 'vnpay123',
                 DB_NAME: 'keyman',
                 DB_CONNECTION_LIMIT: 20,
-                REDIS_HOST: '10.22.7.108' ,
+                REDIS_HOST: '10.22.7.107'  ,
                 REDIS_PORT: 6379,
                 REDIS_PASSWORD: '',
                 RABBITMQ_URL: 'amqp://vnpay:vnpay123@10.22.7.107',
