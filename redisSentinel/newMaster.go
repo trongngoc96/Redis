@@ -45,26 +45,22 @@ func NewMaster() {
 	msg, err := pub.ReceiveMessage(ctx)
 	ch := pub.Channel()
 	fmt.Println("Channel", ch)
-	fmt.Println("Channel" + msg.Channel)
+	fmt.Println("Msg Channel" + msg.Channel)
 	fmt.Println("Msg String" + msg.String())
 	fmt.Println("Msg Pattern " + msg.Pattern)
 	fmt.Println("Msg Payload " + msg.Payload)
 	addr, err := sentinel.GetMasterAddrByName(ctx, "mymaster").Result()
 	if i == 0 {
 		ChangeConfig(ipMaster, "REDIS_HOST: '"+addr[0]+"'")
-		fmt.Println("ddddss", ipMaster)
 		ipMaster = addr[0]
 		i++
 	} else {
 		ChangeConfig(ipMaster, "REDIS_HOST: '"+addr[0]+"'")
 		ipMaster = addr[0]
-		fmt.Println("dddd", ipMaster)
 		if err != nil {
 		}
 		i++
 	}
-
-	fmt.Println("Ip new master", addr[0])
 	NewMaster()
 }
 
