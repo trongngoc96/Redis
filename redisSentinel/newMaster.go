@@ -6,13 +6,29 @@ import (
 	"io/ioutil"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 )
 
 var ctx = context.Background()
-var ipMaster = "10.22.7.107"
+var ipMaster = ""
 var i = 0
+
+func getIPConfig() {
+	data, err := ioutil.ReadFile("config.js")
+	if err != nil {
+		fmt.Println(err)
+	}
+	sRead := string(data)
+	removeDistance := strings.ReplaceAll(sRead, " ", "")
+	removeLine := strings.ReplaceAll(removeDistance, "\n", "")
+	result2 := strings.Index(removeLine, "',REDIS_PORT")
+	result1 := strings.Index(removeLine, `REDIS_HOST`)
+	ipRedisOfConfig := removeLine[result1+12 : result2]
+	ipMaster = ipRedisOfConfig
+	fmt.Println("IP Of File Config.js", ipRedisOfConfig)
+}
 
 func ChangeConfig(dataFind string, addr string) {
 	data, err := ioutil.ReadFile("config.js")
@@ -65,6 +81,7 @@ func NewMaster() {
 }
 
 func main() {
+	getIPConfig()
 	NewMaster()
 	fmt.Scanln()
 }
