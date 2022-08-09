@@ -27,7 +27,7 @@ func newChange(arrCmd []string, ip string) {
 	ipMaster = ip
 	for i := 0; i < len(arrCmd); i++ {
 		dataFile.IP = ipMaster
-		dataFile.PATH = arrCmd[0]
+		dataFile.PATH = arrCmd[i]
 		arrDataFile = append(arrDataFile, dataFile)
 	}
 }
