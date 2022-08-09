@@ -24,9 +24,9 @@ func GetIPConfig(arrCmd []string) []DataFile {
 		sRead := string(data)
 		removeDistance := strings.ReplaceAll(sRead, " ", "")
 		removeLine := strings.ReplaceAll(removeDistance, "\n", "")
-		result2 := strings.Index(removeLine, "',REDIS_PORT")
-		result1 := strings.Index(removeLine, `REDIS_HOST`)
-		ipRedisOfConfig := removeLine[result1+12 : result2]
+		indexAfter := strings.Index(removeLine, "',REDIS_PORT")
+		indexBefore := strings.Index(removeLine, `REDIS_HOST`)
+		ipRedisOfConfig := removeLine[indexBefore+12 : indexAfter]
 		dataFile.IP = ipRedisOfConfig
 		dataFile.PATH = arrCmd[i]
 		//dataFile.dataRead = string(data)
